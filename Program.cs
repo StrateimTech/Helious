@@ -41,14 +41,12 @@ public class Program
             return;
         }
 
-        var horizontalRecoil = double.Parse(values[0]);
-        var verticalRecoil = 20 * double.Parse(values[1]);
-        var initialRecoil = double.Parse(values[2]);
-
-        var rpm = int.Parse(values[3]);
-        var bullets = int.Parse(values[4]);
-        var smoothness = int.Parse(values[5]);
-        //
+        RecoilHandler.HorizontalRecoil = double.Parse(values[0]);
+        RecoilHandler.VerticalRecoil = 20 * double.Parse(values[1]);
+        RecoilHandler.InitialRecoil = double.Parse(values[2]);
+        RecoilHandler.Rpm = int.Parse(values[3]);
+        RecoilHandler.TotalBullets = int.Parse(values[4]);
+        RecoilHandler.Smoothness = int.Parse(values[5]);
 
         var hidHandler = new HidHandler(new[]
             {
@@ -61,18 +59,7 @@ public class Program
             },
             "/dev/hidg0");
 
-        var recoilThread = new Thread(() =>
-        {
-            new RecoilHandler(hidHandler)
-            {
-                HorizontalRecoil = horizontalRecoil,
-                VerticalRecoil = verticalRecoil,
-                InitialRecoil = initialRecoil,
-                Rpm = rpm,
-                TotalBullets = bullets,
-                Smoothness = smoothness
-            };
-        })
+        var recoilThread = new Thread(() => new RecoilHandler(hidHandler))
         {
             IsBackground = true
         };

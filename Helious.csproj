@@ -4,20 +4,23 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <EnableDefaultContentItems>false</EnableDefaultContentItems>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Web\Assets" />
+        <Content Include="Web\Assets\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="HID-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\HID-API\HID-API\bin\Release\net6.0\HID-API.dll</HintPath>
-      </Reference>
+        <Reference Include="HID-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\HID-API\HID-API\bin\Release\net6.0\HID-API.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Figgle" Version="0.5.1" />
+        <PackageReference Include="Figgle" Version="0.5.1" />
     </ItemGroup>
 
 </Project>
