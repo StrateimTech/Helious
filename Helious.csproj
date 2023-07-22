@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Web\Assets" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="HID-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\HID-API\HID-API\bin\Release\net6.0\HID-API.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Figgle" Version="0.5.1" />
+    </ItemGroup>
+
+</Project>
