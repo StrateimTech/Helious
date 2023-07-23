@@ -17,13 +17,12 @@ public static class Frontend
             ContentRootPath = Path.GetFullPath($"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}Web{Path.DirectorySeparatorChar}"),
             WebRootPath = "assets"
         });
-        
+
         builder.Services.AddControllers();
-        
         builder.Services.AddRazorPages(options => { options.RootDirectory = "/Web/Pages"; });
 
-        builder.Services.AddLogging(c => c.ClearProviders());
-        
+        // builder.Services.AddLogging(c => c.ClearProviders());
+
         var app = builder.Build();
 
         if (!app.Environment.IsDevelopment())
@@ -31,12 +30,20 @@ public static class Frontend
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
-        
+
         IServer server = app.Services.GetRequiredService<IServer>();
-        app.Lifetime.ApplicationStarted.Register(() => PortLogger.logAddresses(server.Features));
-        
+        app.Lifetime.ApplicationStarted.Register(() =>
+        {
+            var addressFeature = server.Features.Get<IServerAddressesFeature>();
+            if (addressFeature != null)
+            {
+                ConsoleUtils.WriteLine($"Listening on Ports ({String.Join(", ", addressFeature.Addresses)})");
+            }
+        });
+
+
         app.UseStaticFiles();
-        
+
         app.UseStaticFiles(new StaticFileOptions
         {
             FileProvider = new PhysicalFileProvider(
@@ -53,6 +60,5 @@ public static class Frontend
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
         app.Run();
-        
     }
 }
