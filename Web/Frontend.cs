@@ -19,6 +19,13 @@ public static class Frontend
         });
 
         builder.Services.AddControllers();
+
+        builder.WebHost.UseKestrel(options =>
+        {
+            options.ListenAnyIP(9834);
+            options.ListenAnyIP(8734, configure => configure.UseHttps());
+        });
+
         builder.Services.AddRazorPages(options => { options.RootDirectory = "/Web/Pages"; });
 
         // builder.Services.AddLogging(c => c.ClearProviders());
