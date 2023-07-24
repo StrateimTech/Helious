@@ -6,8 +6,8 @@ namespace Helious.Game;
 
 public class RecoilHandler
 {
-    public static double VerticalRecoil = 0;
-    public static double HorizontalRecoil = 0;
+    public static double VerticalRecoil = 0.0;
+    public static double HorizontalRecoil = 0.0;
     public static double InitialRecoil = 1.0;
 
     public static int Rpm = 0;
@@ -16,6 +16,10 @@ public class RecoilHandler
 
     public static bool GlobalOverflowCorrection = true;
     public static bool LocalOverflowCorrection = true;
+
+    public static bool State = true;
+    public static double Sensitivity = 60;
+    public static double Fov = 100;
 
     public RecoilHandler(HidHandler hidHandler)
     {
@@ -33,6 +37,12 @@ public class RecoilHandler
                 continue;
             }
 
+            if (!State)
+            {
+                Thread.Sleep(1);
+                continue;
+            }
+
             var delay = 60000.0 / Rpm;
 
             if (hidHandler.HidMouseHandlers[0].Mouse.LeftButton && hidHandler.HidMouseHandlers[0].Mouse.RightButton)
@@ -40,7 +50,7 @@ public class RecoilHandler
                 if (currentBullet <= TotalBullets && (VerticalRecoil != 0 || HorizontalRecoil != 0))
                 {
                     var localX = HorizontalRecoil;
-                    var localY = VerticalRecoil;
+                    var localY = 20 * VerticalRecoil;
 
                     if (currentBullet == 0)
                     {
