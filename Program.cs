@@ -16,8 +16,10 @@ public class Program
         var figgleLines = Regex.Split(alligator, "\r\n|\r|\n");
         for (int i = 0; i < figgleLines.Length - 1; i++)
         {
+            Console.Write("\x1b[38;2;" + (i == 0 ? 255 : (255-(5 * i))) + ";" + 64 + ";" + 64 + "m");
             ConsoleUtils.WriteCentered(figgleLines[i]);
         }
+        Console.ResetColor();
 
         var dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.Local);
         var formattedTime = dateTime.ToString("MM/dd/yy HH:mm:ss");
@@ -38,14 +40,8 @@ public class Program
             IsBackground = true
         };
         hidThread.Start();
-
-        if (hidHandler == null)
-        {
-            ConsoleUtils.WriteLine("Failed to start mouse handler... Shutting down!");
-            Environment.Exit(0);
-        }
         
-        ConsoleUtils.WriteLine("Inputs, (Horizontal Recoil, Vertical Recoil, Initial Recoil, Rpm, Bullet Count, Smoothness)");
+        ConsoleUtils.WriteLine("Inputs, (Horizontal Recoil, Vertical Recoil, Initial Recoil, Rpm, Bullet Count, Smoothness, FOV)");
         ConsoleUtils.WriteOnLine();
         var readLine = Console.ReadLine();
         if (readLine == null)
@@ -55,7 +51,7 @@ public class Program
         }
         
         var values = readLine.Split(", ");
-        if (values.Length < 6)
+        if (values.Length < 7)
         {
             ConsoleUtils.WriteLine($"Not enough inputs ({values.Length})");
             return;
@@ -67,8 +63,9 @@ public class Program
         RecoilHandler.Rpm = int.Parse(values[3]);
         RecoilHandler.TotalBullets = int.Parse(values[4]);
         RecoilHandler.Smoothness = int.Parse(values[5]);
+        RecoilHandler.Fov = int.Parse(values[6]);
 
-        var recoilThread = new Thread(() => new RecoilHandler(hidHandler))
+        var recoilThread = new Thread(() => new RecoilHandler(hidHandler!))
         {
             IsBackground = true
         };
@@ -77,7 +74,10 @@ public class Program
         Console.CancelKeyPress += (_, _) =>
         {
             ConsoleUtils.WriteLine("Shutting down...");
-            hidHandler.Stop();
+            if (hidHandler != null)
+            {
+                hidHandler.Stop();
+            }
             Environment.Exit(0);
         };
 

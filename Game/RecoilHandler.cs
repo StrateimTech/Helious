@@ -50,13 +50,16 @@ public class RecoilHandler
                 if (currentBullet <= TotalBullets && (VerticalRecoil != 0 || HorizontalRecoil != 0))
                 {
                     var localX = HorizontalRecoil;
-                    var localY = 20 * VerticalRecoil;
-
+                    var localY = VerticalRecoil;
+                    
                     if (currentBullet == 0)
                     {
                         localX *= InitialRecoil;
                         localY *= InitialRecoil;
                     }
+
+                    var multiplier = Fov * (12.5 / 60);
+                    localY *= multiplier;
 
                     // // false == odd
                     // // true == even
