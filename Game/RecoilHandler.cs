@@ -61,6 +61,7 @@ public class RecoilHandler
                     }
                     
                     var multiplier = (decimal)(Fov * (12 / 60.0));
+                    var bestSmoothness = Smoothness == -1 ? 1 : SimulateBestSmoothness(localY, multiplier, TotalBullets, Smoothness);
                     localY *= multiplier;
 
                     // // false == odd
@@ -150,5 +151,33 @@ public class RecoilHandler
             currentBullet = 0;
             Thread.Sleep(1);
         }
+    }
+
+    private int SimulateBestSmoothness(decimal yRecoil, decimal multiplier, int bulletCount, int smoothness)
+    {
+        decimal? best = null;
+        int bestIndex = -1;
+        for (int i = 6; i < 512; i++)
+        {
+            var yAdjusted = yRecoil * multiplier;
+            var divider = yAdjusted / i;
+            
+            var onlyDecimals = Math.Floor(divider) - divider;
+        
+            var simBullets = Math.Abs(onlyDecimals * bulletCount);
+            best ??= simBullets;
+            
+            if (simBullets < best)
+            {
+                best = simBullets;
+                bestIndex = i;
+            }
+        }
+
+        if (bestIndex == -1)
+        {
+            return smoothness;
+        }
+        return bestIndex;
     }
 }
