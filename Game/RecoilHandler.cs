@@ -23,10 +23,12 @@ public class RecoilHandler
 
     public RecoilHandler(HidHandler hidHandler)
     {
-        var globalOverflowX = 0.0;
-        var globalOverflowY = 0.0;
+        decimal globalOverflowX = 0;
+        decimal globalOverflowY = 0;
 
         var currentBullet = 0;
+        
+        ConsoleUtils.WriteLine($"High Resolution Clocking: {Stopwatch.IsHighResolution}");
 
         while (true)
         {
@@ -49,16 +51,16 @@ public class RecoilHandler
             {
                 if (currentBullet <= TotalBullets && (VerticalRecoil != 0 || HorizontalRecoil != 0))
                 {
-                    var localX = HorizontalRecoil;
-                    var localY = VerticalRecoil;
+                    decimal localX = (decimal)HorizontalRecoil;
+                    decimal localY = (decimal)VerticalRecoil;
                     
                     if (currentBullet == 0)
                     {
-                        localX *= InitialRecoil;
-                        localY *= InitialRecoil;
+                        localX *= (decimal)InitialRecoil;
+                        localY *= (decimal)InitialRecoil;
                     }
-
-                    var multiplier = Fov * (12.5 / 60);
+                    
+                    var multiplier = (decimal)(Fov * (12 / 60.0));
                     localY *= multiplier;
 
                     // // false == odd
@@ -68,10 +70,10 @@ public class RecoilHandler
                     //     localX *= -1;
                     // }
 
-                    var overflowX = 0.0;
-                    var overflowY = 0.0;
+                    decimal overflowX = 0;
+                    decimal overflowY = 0;
 
-                    var smoothedDelay = delay / Smoothness;
+                    var smoothedDelay = delay / bestSmoothness;
 
                     if (LocalOverflowCorrection && GlobalOverflowCorrection)
                     {
@@ -92,12 +94,13 @@ public class RecoilHandler
                         }
                     }
 
-                    Console.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (X: {localX}, Y: {localY}, SM: {Smoothness}, RPM: {Rpm})");
-
-                    for (int i = 0; i < Smoothness; i++)
+                    ConsoleUtils.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (X: {localX}, Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm})");
+                    // Console.WriteLine($"Smoothing Global (X: {globalOverflowX}, Y: {globalOverflowY})");
+                    
+                    for (int i = 0; i < bestSmoothness; i++)
                     {
-                        var smoothedX = localX / Smoothness;
-                        var smoothedY = localY / Smoothness;
+                        decimal smoothedX = localX / bestSmoothness;
+                        decimal smoothedY = localY / bestSmoothness;
 
                         var smoothedIntX = (int) Math.Floor(smoothedX);
                         var smoothedIntY = (int) Math.Floor(smoothedY);
