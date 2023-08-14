@@ -7,7 +7,6 @@ namespace Helious.Game;
 public class RecoilHandler
 {
     public static double VerticalRecoil = 0.0;
-    public static double HorizontalRecoil = 0.0;
     public static double InitialRecoil = 1.0;
 
     public static int Rpm = 0;
@@ -21,7 +20,6 @@ public class RecoilHandler
 
     public RecoilHandler(HidHandler hidHandler)
     {
-        decimal globalOverflowX = 0;
         decimal globalOverflowY = 0;
 
         var currentBullet = 0;
@@ -41,14 +39,12 @@ public class RecoilHandler
 
             if (hidHandler.HidMouseHandlers[0].Mouse.LeftButton && hidHandler.HidMouseHandlers[0].Mouse.RightButton)
             {
-                if (currentBullet <= TotalBullets && (VerticalRecoil != 0 || HorizontalRecoil != 0))
+                if (currentBullet <= TotalBullets && VerticalRecoil != 0)
                 {
-                    decimal localX = (decimal)HorizontalRecoil;
                     decimal localY = (decimal)VerticalRecoil;
                     
                     if (currentBullet == 0)
                     {
-                        localX *= (decimal)InitialRecoil;
                         localY *= (decimal)InitialRecoil;
                     }
                     
@@ -56,21 +52,12 @@ public class RecoilHandler
                     var bestSmoothness = Smoothness == -1 ? 1 : SimulateBestSmoothness(localY, multiplier, TotalBullets, Smoothness);
                     localY *= multiplier;
 
-                    decimal overflowX = 0;
                     decimal overflowY = 0;
 
                     var smoothedDelay = delay / bestSmoothness;
 
                     if (LocalOverflowCorrection && GlobalOverflowCorrection)
                     {
-                        if (globalOverflowX >= 1 || globalOverflowX <= -1)
-                        {
-                            var truncatedGlobalOverflowX = (int) Math.Truncate(globalOverflowX);
-                            globalOverflowX -= truncatedGlobalOverflowX;
-                            
-                            localX += truncatedGlobalOverflowX;
-                        }
-
                         if (globalOverflowY >= 1 || globalOverflowY <= -1)
                         {
                             var truncatedGlobalOverflowY = (int) Math.Truncate(globalOverflowY);
@@ -80,29 +67,17 @@ public class RecoilHandler
                         }
                     }
 
-                    ConsoleUtils.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (X: {localX}, Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm})");
-                    // Console.WriteLine($"Smoothing Global (X: {globalOverflowX}, Y: {globalOverflowY})");
+                    ConsoleUtils.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm})");
                     
                     for (int i = 0; i < bestSmoothness; i++)
                     {
-                        decimal smoothedX = localX / bestSmoothness;
                         decimal smoothedY = localY / bestSmoothness;
 
-                        var smoothedIntX = (int) Math.Floor(smoothedX);
                         var smoothedIntY = (int) Math.Floor(smoothedY);
 
                         if (LocalOverflowCorrection)
                         {
-                            overflowX += smoothedX - smoothedIntX;
                             overflowY += smoothedY - smoothedIntY;
-
-                            if (overflowX >= 1 || overflowX <= -1)
-                            {
-                                var truncatedOverflowX = (int) Math.Truncate(overflowX);
-                                overflowX -= truncatedOverflowX;
-
-                                smoothedIntX += truncatedOverflowX;
-                            }
 
                             if (overflowY >= 1 || overflowY <= -1)
                             {
@@ -115,7 +90,6 @@ public class RecoilHandler
 
                         hidHandler.WriteMouseReport(hidHandler.HidMouseHandlers[0].Mouse with
                         {
-                            X = smoothedIntX,
                             Y = smoothedIntY,
                             Wheel = 0
                         });
@@ -124,7 +98,6 @@ public class RecoilHandler
                         while (stopwatch.ElapsedTicks * 1000000.0 / Stopwatch.Frequency <= smoothedDelay * 1000);
                     }
 
-                    globalOverflowX += overflowX;
                     globalOverflowY += overflowY;
 
                     currentBullet++;

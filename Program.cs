@@ -39,7 +39,7 @@ public class Program
         };
         hidThread.Start();
 
-        ConsoleUtils.WriteLine("Inputs, (Vertical, Horizontal, Initial, Rpm, Magazine Size, Fov)");
+        ConsoleUtils.WriteLine("Inputs, (Vertical, Initial, Rpm, Magazine Size, Fov)");
         ConsoleUtils.WriteLine("Optional, (Smoothness, Global Overflow, Local Overflow)");
         ConsoleUtils.WriteOnLine();
         var readLine = Console.ReadLine();
@@ -50,32 +50,31 @@ public class Program
         }
 
         var values = readLine.Split(", ");
-        if (values.Length < 6)
+        if (values.Length < 5)
         {
             ConsoleUtils.WriteLine($"Not enough inputs ({values.Length}, Minimum 6)");
             return;
         }
         
         RecoilHandler.VerticalRecoil = double.Parse(values[0]);
-        RecoilHandler.HorizontalRecoil = double.Parse(values[1]);
-        RecoilHandler.InitialRecoil = double.Parse(values[2]);
-        RecoilHandler.Rpm = int.Parse(values[3]);
-        RecoilHandler.TotalBullets = int.Parse(values[4]);
-        RecoilHandler.Fov = int.Parse(values[6]);
+        RecoilHandler.InitialRecoil = double.Parse(values[1]);
+        RecoilHandler.Rpm = int.Parse(values[2]);
+        RecoilHandler.TotalBullets = int.Parse(values[3]);
+        RecoilHandler.Fov = int.Parse(values[4]);
 
         switch (values.Length)
         {
+            case 5:
+                RecoilHandler.Smoothness = int.Parse(values[5]);
+                break;
+            case 6:
+                RecoilHandler.Smoothness = int.Parse(values[5]);
+                RecoilHandler.GlobalOverflowCorrection = bool.Parse(values[6]);
+                break;
             case 7:
-                RecoilHandler.Smoothness = int.Parse(values[7]);
-                break;
-            case 8:
-                RecoilHandler.Smoothness = int.Parse(values[7]);
-                RecoilHandler.GlobalOverflowCorrection = bool.Parse(values[8]);
-                break;
-            case 9:
-                RecoilHandler.Smoothness = int.Parse(values[7]);
-                RecoilHandler.GlobalOverflowCorrection = bool.Parse(values[8]);
-                RecoilHandler.LocalOverflowCorrection = bool.Parse(values[9]);
+                RecoilHandler.Smoothness = int.Parse(values[5]);
+                RecoilHandler.GlobalOverflowCorrection = bool.Parse(values[6]);
+                RecoilHandler.LocalOverflowCorrection = bool.Parse(values[7]);
                 break;
         }
 
