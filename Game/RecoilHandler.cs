@@ -49,7 +49,7 @@ public class RecoilHandler
                     }
                     
                     var multiplier = (decimal)(Fov * (12 / 60.0));
-                    var bestSmoothness = Smoothness == -1 ? 1 : SimulateBestSmoothness(localY, multiplier, TotalBullets, Smoothness);
+                    var bestSmoothness = Smoothness == -1 ? 1 : GetBestSmoothness(localY, multiplier, Smoothness);
                     localY *= multiplier;
 
                     decimal overflowY = 0;
@@ -111,31 +111,16 @@ public class RecoilHandler
         }
     }
 
-    private int SimulateBestSmoothness(decimal yRecoil, decimal multiplier, int bulletCount, int minSmoothness = 4)
+    private int GetBestSmoothness(decimal yRecoil, decimal multiplier, int minSmoothness = 4)
     {
-        decimal? best = null;
-        int bestIndex = -1;
-        for (int i = minSmoothness; i < 128; i++)
-        {
-            var yAdjusted = yRecoil * multiplier;
-            var divider = yAdjusted / i;
-            
-            var onlyDecimals = Math.Floor(divider) - divider;
-        
-            var simBullets = Math.Abs(onlyDecimals * bulletCount);
-            best ??= simBullets;
-            
-            if (simBullets < best)
-            {
-                best = simBullets;
-                bestIndex = i;
-            }
-        }
+        var multipliedRecoil = yRecoil * multiplier;
+        var leastLossySmoothness = Math.Truncate(multipliedRecoil);
 
-        if (bestIndex == -1)
+        if (leastLossySmoothness < minSmoothness)
         {
             return minSmoothness;
         }
-        return bestIndex;
+        
+        return (int) leastLossySmoothness;
     }
 }
