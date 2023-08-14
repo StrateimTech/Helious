@@ -17,8 +17,6 @@ public class RecoilHandler
     public static bool GlobalOverflowCorrection = true;
     public static bool LocalOverflowCorrection = true;
 
-    public static bool State = true;
-    public static double Sensitivity = 60;
     public static double Fov = 100;
 
     public RecoilHandler(HidHandler hidHandler)
@@ -36,12 +34,6 @@ public class RecoilHandler
             {
                 ConsoleUtils.WriteLine("Failed to find any mouses connected");
                 Thread.Sleep(5000);
-                continue;
-            }
-
-            if (!State)
-            {
-                Thread.Sleep(1);
                 continue;
             }
 
@@ -64,13 +56,6 @@ public class RecoilHandler
                     var bestSmoothness = Smoothness == -1 ? 1 : SimulateBestSmoothness(localY, multiplier, TotalBullets, Smoothness);
                     localY *= multiplier;
 
-                    // // false == odd
-                    // // true == even
-                    // if (currentBullet % 2 == 0 && localX != 0)
-                    // {
-                    //     localX *= -1;
-                    // }
-
                     decimal overflowX = 0;
                     decimal overflowY = 0;
 
@@ -80,18 +65,18 @@ public class RecoilHandler
                     {
                         if (globalOverflowX >= 1 || globalOverflowX <= -1)
                         {
-                            var flooredGlobalOverflowX = (int) Math.Truncate(globalOverflowX);
-                            globalOverflowX -= flooredGlobalOverflowX;
-
-                            localX += flooredGlobalOverflowX;
+                            var truncatedGlobalOverflowX = (int) Math.Truncate(globalOverflowX);
+                            globalOverflowX -= truncatedGlobalOverflowX;
+                            
+                            localX += truncatedGlobalOverflowX;
                         }
 
                         if (globalOverflowY >= 1 || globalOverflowY <= -1)
                         {
-                            var flooredGlobalOverflowY = (int) Math.Truncate(globalOverflowY);
-                            globalOverflowY -= flooredGlobalOverflowY;
+                            var truncatedGlobalOverflowY = (int) Math.Truncate(globalOverflowY);
+                            globalOverflowY -= truncatedGlobalOverflowY;
 
-                            localY += flooredGlobalOverflowY;
+                            localY += truncatedGlobalOverflowY;
                         }
                     }
 
@@ -113,18 +98,18 @@ public class RecoilHandler
 
                             if (overflowX >= 1 || overflowX <= -1)
                             {
-                                var flooredOverflowX = (int) Math.Truncate(overflowX);
-                                overflowX -= flooredOverflowX;
+                                var truncatedOverflowX = (int) Math.Truncate(overflowX);
+                                overflowX -= truncatedOverflowX;
 
-                                smoothedIntX += flooredOverflowX;
+                                smoothedIntX += truncatedOverflowX;
                             }
 
                             if (overflowY >= 1 || overflowY <= -1)
                             {
-                                var flooredOverflowY = (int) Math.Truncate(overflowY);
-                                overflowY -= flooredOverflowY;
+                                var truncatedOverflowY = (int) Math.Truncate(overflowY);
+                                overflowY -= truncatedOverflowY;
 
-                                smoothedIntY += flooredOverflowY;
+                                smoothedIntY += truncatedOverflowY;
                             }
                         }
 
@@ -153,11 +138,11 @@ public class RecoilHandler
         }
     }
 
-    private int SimulateBestSmoothness(decimal yRecoil, decimal multiplier, int bulletCount, int smoothness)
+    private int SimulateBestSmoothness(decimal yRecoil, decimal multiplier, int bulletCount, int minSmoothness = 4)
     {
         decimal? best = null;
         int bestIndex = -1;
-        for (int i = 6; i < 512; i++)
+        for (int i = minSmoothness; i < 128; i++)
         {
             var yAdjusted = yRecoil * multiplier;
             var divider = yAdjusted / i;
@@ -176,7 +161,7 @@ public class RecoilHandler
 
         if (bestIndex == -1)
         {
-            return smoothness;
+            return minSmoothness;
         }
         return bestIndex;
     }
