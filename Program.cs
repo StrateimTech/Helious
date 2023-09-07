@@ -40,7 +40,7 @@ public class Program
         hidThread.Start();
 
         ConsoleUtils.WriteLine("Inputs, (Vertical, Initial, Rpm, Magazine Size, Fov)");
-        ConsoleUtils.WriteLine("Optional, (Smoothness, Global Overflow, Local Overflow)");
+        ConsoleUtils.WriteLine("Optional, (Smoothness, Scope (2x, 4x), Global Overflow, Local Overflow)");
         ConsoleUtils.WriteOnLine();
         var readLine = Console.ReadLine();
         if (readLine == null)
@@ -64,17 +64,23 @@ public class Program
 
         switch (values.Length)
         {
-            case 5:
-                RecoilHandler.Smoothness = int.Parse(values[5]);
-                break;
             case 6:
                 RecoilHandler.Smoothness = int.Parse(values[5]);
-                RecoilHandler.GlobalOverflowCorrection = bool.Parse(values[6]);
                 break;
             case 7:
                 RecoilHandler.Smoothness = int.Parse(values[5]);
-                RecoilHandler.GlobalOverflowCorrection = bool.Parse(values[6]);
-                RecoilHandler.LocalOverflowCorrection = bool.Parse(values[7]);
+                RecoilHandler.Scope = int.Parse(values[6].Replace("x", ""));
+                break;
+            case 8:
+                RecoilHandler.Smoothness = int.Parse(values[5]);
+                RecoilHandler.Scope = int.Parse(values[6].Replace("x", ""));
+                RecoilHandler.GlobalOverflowCorrection = bool.Parse(values[7]);
+                break;
+            case 9:
+                RecoilHandler.Smoothness = int.Parse(values[5]);
+                RecoilHandler.Scope = int.Parse(values[6].Replace("x", ""));
+                RecoilHandler.GlobalOverflowCorrection = bool.Parse(values[7]);
+                RecoilHandler.LocalOverflowCorrection = bool.Parse(values[8]);
                 break;
         }
 

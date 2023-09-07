@@ -13,6 +13,8 @@ public class RecoilHandler
     public static int TotalBullets = 0;
     public static int Smoothness = 1;
 
+    public static int Scope = 1; 
+
     public static bool GlobalOverflowCorrection = true;
     public static bool LocalOverflowCorrection = true;
 
@@ -26,6 +28,7 @@ public class RecoilHandler
         
         ConsoleUtils.WriteLine($"High Resolution Clocking: {Stopwatch.IsHighResolution}");
 
+        var scopeMultiplier = Scope == 1 ? 1 : Scope * 1.125;
         while (true)
         {
             if (hidHandler.HidMouseHandlers.Count <= 0)
@@ -41,7 +44,7 @@ public class RecoilHandler
             {
                 if (currentBullet <= TotalBullets && VerticalRecoil != 0)
                 {
-                    decimal localY = (decimal)VerticalRecoil;
+                    decimal localY = (decimal)(VerticalRecoil * scopeMultiplier);
                     
                     if (currentBullet == 0)
                     {
