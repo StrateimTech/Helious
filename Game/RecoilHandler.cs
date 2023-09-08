@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Figgle;
 using Helious.Utils;
 using HID_API;
 
@@ -40,7 +41,20 @@ public class RecoilHandler
 
             var delay = 60000.0 / Rpm;
 
-            if (hidHandler.HidMouseHandlers[0].Mouse.LeftButton && hidHandler.HidMouseHandlers[0].Mouse.RightButton)
+            bool left;
+            bool right;
+            hidHandler.HidMouseHandlers[0].mouseLock.EnterReadLock();
+            try
+            {
+                left = hidHandler.HidMouseHandlers[0].Mouse.LeftButton;
+                right = hidHandler.HidMouseHandlers[0].Mouse.RightButton;
+            }
+            finally
+            {
+                hidHandler.HidMouseHandlers[0].mouseLock.ExitReadLock();
+            }
+            
+            if (left && right)
             {
                 if (currentBullet <= TotalBullets && VerticalRecoil != 0)
                 {
@@ -91,11 +105,20 @@ public class RecoilHandler
                             }
                         }
 
-                        hidHandler.WriteMouseReport(hidHandler.HidMouseHandlers[0].Mouse with
+                        hidHandler.HidMouseHandlers[0].mouseLock.EnterReadLock();
+                        try
                         {
-                            Y = smoothedIntY,
-                            Wheel = 0
-                        });
+                            hidHandler.WriteMouseReport(hidHandler.HidMouseHandlers[0].Mouse with
+                            {
+                                X = 0,
+                                Y = smoothedIntY,
+                                Wheel = 0
+                            });
+                        }
+                        finally
+                        {
+                            hidHandler.HidMouseHandlers[0].mouseLock.ExitReadLock();
+                        }
 
                         var stopwatch = Stopwatch.StartNew();
                         while (stopwatch.ElapsedTicks * 1000000.0 / Stopwatch.Frequency <= smoothedDelay * 1000);
