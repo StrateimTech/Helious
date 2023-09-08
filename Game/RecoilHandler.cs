@@ -62,7 +62,7 @@ public class RecoilHandler
                     
                     if (currentBullet == 0)
                     {
-                        localY *= (decimal)InitialRecoil;
+                        localY += (decimal)InitialRecoil;
                     }
                     
                     var multiplier = (decimal)(Fov * (12 / 60.0));
