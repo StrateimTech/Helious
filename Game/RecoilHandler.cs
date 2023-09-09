@@ -12,7 +12,7 @@ public class RecoilHandler
 
     public static int Rpm = 0;
     public static int TotalBullets = 0;
-    public static int Smoothness = 1;
+    public static int Smoothness = 0;
 
     public static int Scope = 1; 
 
@@ -24,12 +24,16 @@ public class RecoilHandler
     public RecoilHandler(HidHandler hidHandler)
     {
         decimal globalOverflowY = 0;
-
         var currentBullet = 0;
         
+        var scopeMultiplier = Scope == 1 ? 1 : Scope * 1.125;
+        
+        if (Smoothness != 0)
+        {
+            ConsoleUtils.WriteLine($"Using user-defined smoothness value ({Smoothness})");
+        }
         ConsoleUtils.WriteLine($"High Resolution Clocking: {Stopwatch.IsHighResolution}");
 
-        var scopeMultiplier = Scope == 1 ? 1 : Scope * 1.125;
         while (true)
         {
             if (hidHandler.HidMouseHandlers.Count <= 0)
@@ -66,8 +70,8 @@ public class RecoilHandler
                     }
                     
                     var multiplier = (decimal)(Fov * (12 / 60.0));
-                    var bestSmoothness = Smoothness == -1 ? 1 : GetBestSmoothness(localY, multiplier, Smoothness);
                     localY *= multiplier;
+                    var bestSmoothness = Smoothness != 0 ? Smoothness : (int)Math.Round(Math.Sqrt((double)localY));
 
                     decimal overflowY = 0;
 
@@ -135,18 +139,5 @@ public class RecoilHandler
             currentBullet = 0;
             Thread.Sleep(1);
         }
-    }
-
-    private int GetBestSmoothness(decimal yRecoil, decimal multiplier, int minSmoothness = 4)
-    {
-        var multipliedRecoil = yRecoil * multiplier;
-        var leastLossySmoothness = Math.Truncate(multipliedRecoil);
-
-        if (leastLossySmoothness < minSmoothness)
-        {
-            return minSmoothness;
-        }
-        
-        return (int) leastLossySmoothness;
     }
 }
