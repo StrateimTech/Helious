@@ -26,7 +26,7 @@ public class RecoilHandler
         decimal globalOverflowY = 0;
         var currentBullet = 0;
         
-        var scopeMultiplier = Scope == 1 ? 1 : Scope * 1.125;
+        var scopeMultiplier = Scope == 1 ? 1 : Scope * 1;
         
         if (Smoothness != 0)
         {
