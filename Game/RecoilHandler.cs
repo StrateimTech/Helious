@@ -20,17 +20,20 @@ public class RecoilHandler
 
     public static double Fov = 100;
 
+    private readonly Stopwatch _recoilReset = new();
+
     public RecoilHandler(HidHandler hidHandler)
     {
         decimal globalOverflowY = 0;
         var currentBullet = 0;
-        
+
         var scopeMultiplier = Scope == 1.0 ? 1 : Scope * 1;
-        
+
         if (Smoothness != 0)
         {
             ConsoleUtils.WriteLine($"Using user-defined smoothness value ({Smoothness})");
         }
+
         ConsoleUtils.WriteLine($"High Resolution Clocking: {Stopwatch.IsHighResolution}");
 
         while (true)
@@ -56,18 +59,20 @@ public class RecoilHandler
             {
                 hidHandler.HidMouseHandlers[0].mouseLock.ExitReadLock();
             }
-            
+
             if (left && right)
             {
+                _recoilReset.Reset();
+
                 if (currentBullet < TotalBullets && VerticalRecoil != 0)
                 {
                     decimal localY = (decimal) (VerticalRecoil * scopeMultiplier);
-                    
+
                     if (currentBullet == 0)
                     {
                         localY += (decimal) InitialRecoil;
                     }
-                    
+
                     var multiplier = (decimal) (Fov * (12 / 60.0));
                     localY *= multiplier;
                     var bestSmoothness = Smoothness != 0 ? Smoothness : (int) Math.Round(Math.Sqrt((double) localY));
@@ -88,7 +93,7 @@ public class RecoilHandler
                     }
 
                     ConsoleUtils.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm})");
-                    
+
                     for (int i = 0; i < bestSmoothness; i++)
                     {
                         decimal smoothedY = localY / bestSmoothness;
@@ -124,7 +129,7 @@ public class RecoilHandler
                         }
 
                         var stopwatch = Stopwatch.StartNew();
-                        while (stopwatch.ElapsedTicks * 1000000.0 / Stopwatch.Frequency <= smoothedDelay * 1000);
+                        while (stopwatch.ElapsedTicks * 1000000.0 / Stopwatch.Frequency <= smoothedDelay * 1000) ;
                     }
 
                     globalOverflowY += overflowY;
@@ -135,8 +140,12 @@ public class RecoilHandler
                 continue;
             }
 
-            currentBullet = 0;
-            Thread.Sleep(1);
+            _recoilReset.Start();
+
+            if (_recoilReset.ElapsedMilliseconds > 500)
+            {
+                currentBullet = 0;
+            }
         }
     }
 }
