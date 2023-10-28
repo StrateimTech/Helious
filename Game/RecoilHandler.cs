@@ -22,6 +22,9 @@ public class RecoilHandler
 
     private readonly Stopwatch _recoilReset = new();
 
+    public static readonly Stopwatch WaitAiming = new();
+    public static bool Aiming;
+    
     public RecoilHandler(HidHandler hidHandler)
     {
         decimal globalOverflowY = 0;
@@ -58,6 +61,21 @@ public class RecoilHandler
             finally
             {
                 hidHandler.HidMouseHandlers[0].mouseLock.ExitReadLock();
+            }
+            
+            if (right)
+            {
+                if (!WaitAiming.IsRunning)
+                {
+                    WaitAiming.Restart();
+                }
+            
+                Aiming = true;
+            }
+            else
+            {
+                Aiming = false;
+                WaitAiming.Reset();
             }
 
             if (left && right)

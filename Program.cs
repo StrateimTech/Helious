@@ -84,6 +84,12 @@ public class Program
                 break;
         }
 
+        var serverThread = new Thread(() => new ServerHandler(hidHandler!))
+        {
+            IsBackground = true
+        };
+        serverThread.Start();
+
         var recoilThread = new Thread(() => new RecoilHandler(hidHandler!))
         {
             IsBackground = true
