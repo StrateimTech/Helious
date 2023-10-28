@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Figgle;
 using Helious.Utils;
 using HID_API;
 
@@ -14,7 +13,7 @@ public class RecoilHandler
     public static int TotalBullets = 0;
     public static int Smoothness = 0;
 
-    public static int Scope = 1; 
+    public static double Scope = 1.0;
 
     public static bool GlobalOverflowCorrection = true;
     public static bool LocalOverflowCorrection = true;
@@ -26,7 +25,7 @@ public class RecoilHandler
         decimal globalOverflowY = 0;
         var currentBullet = 0;
         
-        var scopeMultiplier = Scope == 1 ? 1 : Scope * 1;
+        var scopeMultiplier = Scope == 1.0 ? 1 : Scope * 1;
         
         if (Smoothness != 0)
         {
@@ -60,18 +59,18 @@ public class RecoilHandler
             
             if (left && right)
             {
-                if (currentBullet <= TotalBullets && VerticalRecoil != 0)
+                if (currentBullet < TotalBullets && VerticalRecoil != 0)
                 {
-                    decimal localY = (decimal)(VerticalRecoil * scopeMultiplier);
+                    decimal localY = (decimal) (VerticalRecoil * scopeMultiplier);
                     
                     if (currentBullet == 0)
                     {
-                        localY += (decimal)InitialRecoil;
+                        localY += (decimal) InitialRecoil;
                     }
                     
-                    var multiplier = (decimal)(Fov * (12 / 60.0));
+                    var multiplier = (decimal) (Fov * (12 / 60.0));
                     localY *= multiplier;
-                    var bestSmoothness = Smoothness != 0 ? Smoothness : (int)Math.Round(Math.Sqrt((double)localY));
+                    var bestSmoothness = Smoothness != 0 ? Smoothness : (int) Math.Round(Math.Sqrt((double) localY));
 
                     decimal overflowY = 0;
 
