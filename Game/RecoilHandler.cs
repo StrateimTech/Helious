@@ -19,6 +19,7 @@ public class RecoilHandler
     public static bool LocalOverflowCorrection = true;
 
     public static double Fov = 100;
+    public static double Sens = 100;
 
     private readonly Stopwatch _recoilReset = new();
 
@@ -65,7 +66,7 @@ public class RecoilHandler
                         localY += (decimal) InitialRecoil;
                     }
 
-                    var multiplier = (decimal) (Fov * (12 / 60.0));
+                    var multiplier = (decimal) (Fov * (12 / 60.0) / (Sens / 100));
                     localY *= multiplier;
                     var bestSmoothness = Smoothness != 0 ? Smoothness : (int) Math.Round(Math.Sqrt((double) localY));
 
