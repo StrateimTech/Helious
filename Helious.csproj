@@ -17,15 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="publish\appsettings.json" />
-      <_ContentIncludedByDefault Remove="publish\Helious.deps.json" />
-      <_ContentIncludedByDefault Remove="publish\Helious.runtimeconfig.json" />
-      <_ContentIncludedByDefault Remove="publish\publish\appsettings.json" />
-      <_ContentIncludedByDefault Remove="publish\publish\Helious.deps.json" />
-      <_ContentIncludedByDefault Remove="publish\publish\Helious.runtimeconfig.json" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="HID-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\HID-API\publish\HID-API.dll</HintPath>
       </Reference>

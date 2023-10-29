@@ -145,6 +145,7 @@ public class RecoilHandler
             if (_recoilReset.ElapsedMilliseconds > 500)
             {
                 currentBullet = 0;
+                globalOverflowY = 0;
             }
         }
     }
