@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="HID-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="HID-API, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\HID-API\publish\HID-API.dll</HintPath>
       </Reference>
     </ItemGroup>

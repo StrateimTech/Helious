@@ -49,18 +49,8 @@ public class RecoilHandler
 
             var delay = 60000.0 / Rpm;
 
-            bool left;
-            bool right;
-            hidHandler.HidMouseHandlers[0].mouseLock.EnterReadLock();
-            try
-            {
-                left = hidHandler.HidMouseHandlers[0].Mouse.LeftButton;
-                right = hidHandler.HidMouseHandlers[0].Mouse.RightButton;
-            }
-            finally
-            {
-                hidHandler.HidMouseHandlers[0].mouseLock.ExitReadLock();
-            }
+            bool left = hidHandler.HidMouseHandlers[0].Mouse.LeftButton;
+            bool right = hidHandler.HidMouseHandlers[0].Mouse.RightButton;
 
             if (left && right)
             {
@@ -101,7 +91,7 @@ public class RecoilHandler
                     {
                         decimal smoothedY = localY / bestSmoothness;
 
-                        var smoothedIntY = (int) Math.Floor(smoothedY);
+                        var smoothedIntY = (int) Math.Round(smoothedY, 0, MidpointRounding.ToZero);
 
                         if (LocalOverflowCorrection)
                         {
@@ -116,20 +106,12 @@ public class RecoilHandler
                             }
                         }
 
-                        hidHandler.HidMouseHandlers[0].mouseLock.EnterReadLock();
-                        try
+                        hidHandler.AddGenericToQueue(hidHandler.HidMouseHandlers[0].Mouse with
                         {
-                            hidHandler.WriteMouseReport(hidHandler.HidMouseHandlers[0].Mouse with
-                            {
-                                X = 0,
-                                Y = smoothedIntY,
-                                Wheel = 0
-                            });
-                        }
-                        finally
-                        {
-                            hidHandler.HidMouseHandlers[0].mouseLock.ExitReadLock();
-                        }
+                            X = 0,
+                            Y = smoothedIntY,
+                            Wheel = 0
+                        });
 
                         _bulletTiming.Restart();
 
