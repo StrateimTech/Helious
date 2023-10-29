@@ -22,6 +22,8 @@ public class RecoilHandler
 
     private readonly Stopwatch _recoilReset = new();
 
+    private readonly Stopwatch _bulletTiming = new();
+    
     public RecoilHandler(HidHandler hidHandler)
     {
         decimal globalOverflowY = 0;
@@ -83,7 +85,7 @@ public class RecoilHandler
 
                     if (LocalOverflowCorrection && GlobalOverflowCorrection)
                     {
-                        if (globalOverflowY >= 1 || globalOverflowY <= -1)
+                        if ((int) globalOverflowY != 0)
                         {
                             var truncatedGlobalOverflowY = (int) Math.Truncate(globalOverflowY);
                             globalOverflowY -= truncatedGlobalOverflowY;
@@ -94,6 +96,7 @@ public class RecoilHandler
 
                     ConsoleUtils.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm})");
 
+                    var timeOverflow = 0.0;
                     for (int i = 0; i < bestSmoothness; i++)
                     {
                         decimal smoothedY = localY / bestSmoothness;
@@ -104,7 +107,7 @@ public class RecoilHandler
                         {
                             overflowY += smoothedY - smoothedIntY;
 
-                            if (overflowY >= 1 || overflowY <= -1)
+                            if ((int) overflowY != 0)
                             {
                                 var truncatedOverflowY = (int) Math.Truncate(overflowY);
                                 overflowY -= truncatedOverflowY;
@@ -128,12 +131,19 @@ public class RecoilHandler
                             hidHandler.HidMouseHandlers[0].mouseLock.ExitReadLock();
                         }
 
-                        var stopwatch = Stopwatch.StartNew();
-                        while (stopwatch.ElapsedTicks * 1000000.0 / Stopwatch.Frequency <= smoothedDelay * 1000) ;
+                        _bulletTiming.Restart();
+
+                        while (true)
+                        {
+                            if (_bulletTiming.ElapsedTicks * 1000000.0 / Stopwatch.Frequency >= (smoothedDelay * 1000) + timeOverflow)
+                            {
+                                timeOverflow = _bulletTiming.ElapsedTicks * 1000000.0 / Stopwatch.Frequency - smoothedDelay * 1000 - timeOverflow;
+                                break;
+                            }
+                        }
                     }
 
                     globalOverflowY += overflowY;
-
                     currentBullet++;
                 }
 
