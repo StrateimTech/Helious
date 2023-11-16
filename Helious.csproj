@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Content Include="recoil.gif" />
         <Content Include="Web\Assets\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -14,11 +15,8 @@
 
     <ItemGroup>
         <PackageReference Include="Figgle" Version="0.5.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="HID-API, Version=1.0.0.5, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\HID-API\publish\HID-API.dll</HintPath>
-      </Reference>
+        <Reference Include="HID-API, Version=1.0.0.19, Culture=neutral, PublicKeyToken=null">
+            <HintPath>libs\HID-API.dll</HintPath>
+        </Reference>
     </ItemGroup>
 </Project>
