@@ -19,7 +19,7 @@ Uses the same concepts for hardware mouse injection as [Cezium](https://github.c
 ## Installation
 ```
 git clone https://github.com/StrateimTech/Helious
-cd ./hid-api-rs
+cd ./Helious
 dotnet publish -o build -r linux-arm
 ```
 Transfer all files within the build directory to the RPi.
