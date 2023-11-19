@@ -31,7 +31,7 @@ public class Program
             {
                 "/dev/input/mice"
             },
-            new string[] { },
+            null!,
             "/dev/hidg0")
         )
         {

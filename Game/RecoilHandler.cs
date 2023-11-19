@@ -50,8 +50,18 @@ public class RecoilHandler
 
             var delay = 60000.0 / Rpm;
 
-            bool left = hidHandler.HidMouseHandlers[0].Mouse.LeftButton;
-            bool right = hidHandler.HidMouseHandlers[0].Mouse.RightButton;
+            bool left;
+            bool right;
+            hidHandler.HidMouseHandlers[0].MouseLock.EnterReadLock();
+            try
+            {
+                left = hidHandler.HidMouseHandlers[0].Mouse.LeftButton;
+                right = hidHandler.HidMouseHandlers[0].Mouse.RightButton;
+            }
+            finally
+            {
+                hidHandler.HidMouseHandlers[0].MouseLock.ExitReadLock();
+            }
 
             if (left && right)
             {
@@ -107,12 +117,20 @@ public class RecoilHandler
                             }
                         }
 
-                        hidHandler.AddGenericToQueue(hidHandler.HidMouseHandlers[0].Mouse with
+                        hidHandler.HidMouseHandlers[0].MouseLock.EnterReadLock();
+                        try
                         {
-                            X = 0,
-                            Y = smoothedIntY,
-                            Wheel = 0
-                        });
+                            hidHandler.WriteGenericEvent(hidHandler.HidMouseHandlers[0].Mouse with
+                            {
+                                X = 0,
+                                Y = smoothedIntY,
+                                Wheel = 0
+                            });
+                        }
+                        finally
+                        {
+                            hidHandler.HidMouseHandlers[0].MouseLock.ExitReadLock();
+                        }
 
                         _bulletTiming.Restart();
 

@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="Figgle" Version="0.5.1" />
-        <Reference Include="HID-API, Version=1.0.0.19, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="HID-API, Version=1.0.0.40, Culture=neutral, PublicKeyToken=null">
             <HintPath>libs\HID-API.dll</HintPath>
         </Reference>
     </ItemGroup>
