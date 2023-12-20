@@ -30,6 +30,7 @@ public class RecoilHandler
     public RecoilHandler(HidHandler hidHandler)
     {
         decimal globalOverflowY = 0;
+        var globalTimeOverflow = 0.0;
         var currentBullet = 0;
 
         var scopeMultiplier = Scope == 1.0 ? 1 : Scope * 1;
@@ -98,9 +99,12 @@ public class RecoilHandler
                         }
                     }
 
-                    ConsoleUtils.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm})");
-
-                    var timeOverflow = 0.0;
+                    _benchmarkTiming.Stop();
+                    ConsoleUtils.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm}) | (Computation: {_benchmarkTiming.ElapsedTicks / 1000000.0}ms)");
+                    
+                    var timeOverflow = globalTimeOverflow;
+                    globalTimeOverflow = 0;
+                    
                     for (int i = 0; i < bestSmoothness; i++)
                     {
                         decimal smoothedY = localY / bestSmoothness;
@@ -139,14 +143,15 @@ public class RecoilHandler
 
                         while (true)
                         {
-                            if (_bulletTiming.ElapsedTicks * 1000000.0 / Stopwatch.Frequency >= (smoothedDelay * 1000) + timeOverflow)
+                            if (_bulletTiming.ElapsedTicks * 1000000.0 / Stopwatch.Frequency >= (smoothedDelay * 1000) - timeOverflow)
                             {
-                                timeOverflow = _bulletTiming.ElapsedTicks * 1000000.0 / Stopwatch.Frequency - smoothedDelay * 1000 - timeOverflow;
+                                timeOverflow = _bulletTiming.ElapsedTicks * 1000000.0 / Stopwatch.Frequency - smoothedDelay * 1000;
                                 break;
                             }
                         }
                     }
 
+                    globalTimeOverflow += timeOverflow;
                     globalOverflowY += overflowY;
                     currentBullet++;
                 }
@@ -160,6 +165,7 @@ public class RecoilHandler
             {
                 currentBullet = 0;
                 globalOverflowY = 0;
+                globalTimeOverflow = 0;
             }
         }
     }
