@@ -25,12 +25,20 @@ public class RecoilHandler
 
     private readonly Stopwatch _bulletTiming = new();
     
+    private readonly Stopwatch _benchmarkTiming = new();
+    
     public RecoilHandler(HidHandler hidHandler)
     {
         decimal globalOverflowY = 0;
         var currentBullet = 0;
 
         var scopeMultiplier = Scope == 1.0 ? 1 : Scope * 1;
+        
+        var multiplier = (decimal) (Fov * (12 / 60.0) / (Sens / 100));
+        
+        var delay = 60000.0 / Rpm;
+        var bestSmoothness = Smoothness != 0 ? Smoothness : (int) Math.Round(Math.Sqrt((VerticalRecoil * scopeMultiplier) * (double)multiplier));
+        var smoothedDelay = delay / bestSmoothness;
 
         if (Smoothness != 0)
         {
@@ -41,14 +49,13 @@ public class RecoilHandler
 
         while (true)
         {
+            _benchmarkTiming.Restart();
             if (hidHandler.HidMouseHandlers.Count <= 0)
             {
                 ConsoleUtils.WriteLine("Failed to find any mouses connected");
                 Thread.Sleep(5000);
                 continue;
             }
-
-            var delay = 60000.0 / Rpm;
 
             bool left;
             bool right;
@@ -76,19 +83,15 @@ public class RecoilHandler
                         localY += (decimal) InitialRecoil;
                     }
 
-                    var multiplier = (decimal) (Fov * (12 / 60.0) / (Sens / 100));
                     localY *= multiplier;
-                    var bestSmoothness = Smoothness != 0 ? Smoothness : (int) Math.Round(Math.Sqrt((double) localY));
 
                     decimal overflowY = 0;
-
-                    var smoothedDelay = delay / bestSmoothness;
 
                     if (LocalOverflowCorrection && GlobalOverflowCorrection)
                     {
                         if ((int) globalOverflowY != 0)
                         {
-                            var truncatedGlobalOverflowY = (int) Math.Truncate(globalOverflowY);
+                            var truncatedGlobalOverflowY = (int) Math.Ceiling(globalOverflowY);
                             globalOverflowY -= truncatedGlobalOverflowY;
 
                             localY += truncatedGlobalOverflowY;
@@ -110,7 +113,7 @@ public class RecoilHandler
 
                             if ((int) overflowY != 0)
                             {
-                                var truncatedOverflowY = (int) Math.Truncate(overflowY);
+                                var truncatedOverflowY = (int) Math.Ceiling(overflowY);
                                 overflowY -= truncatedOverflowY;
 
                                 smoothedIntY += truncatedOverflowY;
