@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Optimize>true</Optimize>
@@ -17,7 +17,7 @@
 
     <ItemGroup>
         <PackageReference Include="Figgle" Version="0.5.1" />
-        <Reference Include="HID-API, Version=1.0.0.40, Culture=neutral, PublicKeyToken=null">
+        <Reference Include="HID-API, Version=1.0.0.82, Culture=neutral, PublicKeyToken=null">
             <HintPath>libs\HID-API.dll</HintPath>
         </Reference>
     </ItemGroup>
