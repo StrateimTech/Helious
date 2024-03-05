@@ -83,6 +83,13 @@ public class Program
                 RecoilHandler.LocalOverflowCorrection = bool.Parse(values[8]);
                 break;
         }
+        
+        // Enable it if you want! (NOT ENCRYPTED!)
+        // var serverThread = new Thread(() => new ServerHandler(hidHandler!))
+        // {
+        //     IsBackground = true
+        // };
+        // serverThread.Start();
 
         var recoilThread = new Thread(() => new RecoilHandler(hidHandler!))
         {
