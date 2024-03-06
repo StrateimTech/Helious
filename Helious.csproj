@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Content Include="gun-stats-example.png" />
         <Content Include="recoil.gif" />
         <Content Include="Web\Assets\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
