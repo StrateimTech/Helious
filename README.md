@@ -22,7 +22,7 @@ _Has since improved exponentially as of 3/6/2024_
 ```
 git clone https://github.com/StrateimTech/Helious
 cd ./Helious
-dotnet publish -o build -r linux-arm
+dotnet publish -c Release -o publish -r linux-arm --self-contained true -p:PublishReadyToRun=true
 ```
 Transfer all files within the build directory to the RPi via your choice of method.
 Don't forget to chmod :)
