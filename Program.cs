@@ -86,15 +86,20 @@ public class Program
         // Enable it if you want! (NOT ENCRYPTED!)
         // var serverThread = new Thread(() => new ServerHandler(hidHandler!))
         // {
-        //     IsBackground = true
+        //     IsBackground = true,
+        //     Priority = ThreadPriority.Highest
         // };
         // serverThread.Start();
 
-        var recoilThread = new Thread(() => new RecoilHandler(hidHandler!))
+        if (RecoilHandler.VerticalRecoil != 0 && RecoilHandler.InitialRecoil != 0)
         {
-            IsBackground = true
-        };
-        recoilThread.Start();
+            var recoilThread = new Thread(() => new RecoilHandler(hidHandler!))
+            {
+                IsBackground = true,
+                Priority = ThreadPriority.Highest
+            };
+            recoilThread.Start();
+        }
 
         Console.CancelKeyPress += (_, _) =>
         {
