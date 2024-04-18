@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
 using Helious.Utils;
 using HID_API;
 
@@ -24,12 +26,9 @@ public class RecoilHandler
     private readonly Stopwatch _recoilReset = new();
 
     private readonly Stopwatch _bulletTiming = new();
-    
+
     private readonly Stopwatch _benchmarkTiming = new();
-    
-    public static readonly Stopwatch WaitAiming = new();
-    public static bool Aiming;
-    
+
     public RecoilHandler(HidHandler hidHandler)
     {
         decimal globalOverflowY = 0;
@@ -37,11 +36,11 @@ public class RecoilHandler
         var currentBullet = 0;
 
         var scopeMultiplier = Scope == 1.0 ? 1 : Scope * 1;
-        
+
         var multiplier = (decimal) (Fov * (12 / 60.0) / (Sens / 100));
-        
+
         var delay = 60000.0 / Rpm;
-        var bestSmoothness = Smoothness != 0 ? Smoothness : (int) Math.Round(Math.Sqrt((VerticalRecoil * scopeMultiplier) * (double)multiplier));
+        var bestSmoothness = Smoothness != 0 ? Smoothness : (int) Math.Round(Math.Sqrt((VerticalRecoil * scopeMultiplier) * (double) multiplier));
         var smoothedDelay = delay / bestSmoothness;
 
         if (Smoothness != 0)
@@ -50,6 +49,13 @@ public class RecoilHandler
         }
 
         ConsoleUtils.WriteLine($"High Resolution Clocking: {Stopwatch.IsHighResolution}");
+
+        if (hidHandler.HidPath == null)
+        {
+            ConsoleUtils.WriteLine("Couldn't create hid stream; path not found.");
+            return;
+        }
+        var hidStream = hidHandler.CreateHidStream("/dev/hidg1");
 
         while (true)
         {
@@ -61,35 +67,8 @@ public class RecoilHandler
                 continue;
             }
 
-            bool left;
-            bool right;
-            hidHandler.HidMouseHandlers[0].MouseLock.EnterReadLock();
-            try
-            {
-                left = hidHandler.HidMouseHandlers[0].Mouse.LeftButton;
-                right = hidHandler.HidMouseHandlers[0].Mouse.RightButton;
-            }
-            finally
-            {
-                hidHandler.HidMouseHandlers[0].MouseLock.ExitReadLock();
-            }
-            
-            if (right)
-            {
-                if (!WaitAiming.IsRunning)
-                {
-                    WaitAiming.Restart();
-                }
-            
-                Aiming = true;
-            }
-            else
-            {
-                Aiming = false;
-                WaitAiming.Reset();
-            }
-
-            if (left && right)
+            var mouseState = hidHandler.HidMouseHandlers[0].GetMouseState();
+            if (mouseState.LeftButton && mouseState.RightButton)
             {
                 _recoilReset.Reset();
 
@@ -118,11 +97,12 @@ public class RecoilHandler
                     }
 
                     _benchmarkTiming.Stop();
-                    ConsoleUtils.WriteLine($"Bullet {currentBullet} \\ {TotalBullets} | (Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm}) | (Computation: {_benchmarkTiming.ElapsedTicks / 1000000.0}ms)");
-                    
+                    ConsoleUtils.WriteLine(
+                        $"Bullet {currentBullet} \\ {TotalBullets} | (Y: {localY}, BSM: {bestSmoothness}, RPM: {Rpm}) | (Computation: {_benchmarkTiming.ElapsedTicks / 1000000.0}ms)");
+
                     var timeOverflow = globalTimeOverflow;
                     globalTimeOverflow = 0;
-                    
+
                     for (int i = 0; i < bestSmoothness; i++)
                     {
                         decimal smoothedY = localY / bestSmoothness;
@@ -142,20 +122,12 @@ public class RecoilHandler
                             }
                         }
 
-                        hidHandler.HidMouseHandlers[0].MouseLock.EnterReadLock();
-                        try
+                        hidHandler.WriteMouseReport(mouseState with
                         {
-                            hidHandler.WriteGenericEvent(hidHandler.HidMouseHandlers[0].Mouse with
-                            {
-                                X = 0,
-                                Y = smoothedIntY,
-                                Wheel = 0
-                            });
-                        }
-                        finally
-                        {
-                            hidHandler.HidMouseHandlers[0].MouseLock.ExitReadLock();
-                        }
+                            X = 0,
+                            Y = (short)smoothedIntY,
+                            Wheel = 0
+                        }, hidStream);
 
                         _bulletTiming.Restart();
 

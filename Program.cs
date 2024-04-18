@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Threading;
 using Helious.Game;
 using Helious.Utils;
 using HID_API;
@@ -27,10 +29,7 @@ public class Program
         ConsoleUtils.WriteCentered($"> {formattedTime} <\n");
 
         HidHandler? hidHandler = null;
-        var hidThread = new Thread(() => hidHandler = new HidHandler(new[]
-            {
-                "/dev/input/mice"
-            },
+        var hidThread = new Thread(() => hidHandler = new HidHandler(new[] {"/dev/input/mice"},
             null!,
             "/dev/hidg0")
         )
@@ -52,7 +51,7 @@ public class Program
         var values = readLine.Split(", ");
         if (values.Length < 5)
         {
-            ConsoleUtils.WriteLine($"Not enough inputs ({values.Length}, Minimum 6)");
+            ConsoleUtils.WriteLine($"Not enough inputs ({values.Length}, Minimum 5)");
             return;
         }
         
