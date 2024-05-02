@@ -90,6 +90,13 @@ public class Program
         //     Priority = ThreadPriority.Highest
         // };
         // serverThread.Start();
+        //
+        // var remoteThread = new Thread(() => new RemoteHandler(hidHandler!))
+        // {
+        //     IsBackground = true,
+        //     Priority = ThreadPriority.Highest
+        // };
+        // remoteThread.Start();
 
         if (RecoilHandler.VerticalRecoil != 0 && RecoilHandler.InitialRecoil != 0)
         {
