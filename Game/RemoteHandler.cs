@@ -30,7 +30,6 @@ public class RemoteHandler
         }
     }
     
-    
     private static byte[] PreparePacket(Mouse state)
     {
         return new[]
@@ -39,7 +38,9 @@ public class RemoteHandler
             (byte) (state.RightButton ? 1 : 0),
             (byte) (state.MiddleButton ? 1 : 0),
             (byte) (state.FourButton ? 1 : 0),
-            (byte) (state.FiveButton ? 1 : 0)
+            (byte) (state.FiveButton ? 1 : 0),
+            (byte) (state.X >> 0), (byte) (state.X >> 8),
+            (byte) (state.Y >> 0), (byte) (state.Y >> 8)
         };
     }
 }

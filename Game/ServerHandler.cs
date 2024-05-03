@@ -9,7 +9,7 @@ namespace Helious.Game;
 public class ServerHandler
 {
     private readonly bool _hasMouse;
-    private static readonly IPAddress Broadcast = IPAddress.Parse("192.168.0.190");
+    private static readonly IPAddress Broadcast = IPAddress.Parse("192.168.0.189");
     private readonly EndPoint _localEndpoint = new IPEndPoint(Broadcast, 7483);
     private readonly List<long> _timingR = new();
     private readonly List<long> _timingS = new();
