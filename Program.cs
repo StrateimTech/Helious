@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using System.Threading;
 using Helious.Game;
 using Helious.Utils;
 using HID_API;
@@ -86,7 +83,8 @@ public class Program
         }
         
         // Enable it if you want! (NOT ENCRYPTED!)
-        // var serverThread = new Thread(() => new ServerHandler(hidHandler!))
+        // var hostAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList.Where(x => x.AddressFamily == AddressFamily.InterNetwork).ToArray()[^1];
+        // var serverThread = new Thread(() => new ServerHandler(hidHandler!, hostAddress))
         // {
         //     IsBackground = true,
         //     Priority = ThreadPriority.Highest
@@ -99,14 +97,6 @@ public class Program
         //     Priority = ThreadPriority.Highest
         // };
         // remoteThread.Start();
-        serverThread.Start();
-        
-        var remoteThread = new Thread(() => new RemoteHandler(hidHandler!))
-        {
-            IsBackground = true,
-            Priority = ThreadPriority.Highest
-        };
-        remoteThread.Start();
 
         if (RecoilHandler.VerticalRecoil != 0 && RecoilHandler.InitialRecoil != 0)
         {

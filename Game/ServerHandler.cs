@@ -9,12 +9,10 @@ namespace Helious.Game;
 public class ServerHandler
 {
     private readonly bool _hasMouse;
-    private static readonly IPAddress Broadcast = IPAddress.Parse("192.168.0.189");
-    private readonly EndPoint _localEndpoint = new IPEndPoint(Broadcast, 7483);
     private readonly List<long> _timingR = new();
     private readonly List<long> _timingS = new();
 
-    public ServerHandler(HidHandler hidHandler)
+    public ServerHandler(HidHandler hidHandler, IPAddress hostAddress)
     {
         while (true)
         {
@@ -30,9 +28,10 @@ public class ServerHandler
             }
         }
     
+        var localEndpoint = new IPEndPoint(hostAddress, 7483);
         using Socket listener = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         listener.Blocking = false;
-        listener.Bind(_localEndpoint);
+        listener.Bind(localEndpoint);
 
         Span<byte> bytes = GC.AllocateArray<byte>(8, true);
         Stopwatch sending = new Stopwatch();
