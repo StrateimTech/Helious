@@ -9,7 +9,7 @@ public class RemoteHandler
     private readonly Mouse _localState = new();
     
     private static readonly Socket Socket = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-    private static readonly IPAddress Broadcast = IPAddress.Parse("192.168.0.159");
+    private static readonly IPAddress Broadcast = IPAddress.Parse("192.168.68.58");
     private static readonly IPEndPoint EndPoint = new(Broadcast, 7484);
     
     public RemoteHandler(HidHandler hidHandler)

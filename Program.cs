@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Helious.Game;
@@ -97,6 +99,14 @@ public class Program
         //     Priority = ThreadPriority.Highest
         // };
         // remoteThread.Start();
+        serverThread.Start();
+        
+        var remoteThread = new Thread(() => new RemoteHandler(hidHandler!))
+        {
+            IsBackground = true,
+            Priority = ThreadPriority.Highest
+        };
+        remoteThread.Start();
 
         if (RecoilHandler.VerticalRecoil != 0 && RecoilHandler.InitialRecoil != 0)
         {

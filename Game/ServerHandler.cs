@@ -38,11 +38,6 @@ public class ServerHandler
         Stopwatch sending = new Stopwatch();
         Stopwatch reading = new Stopwatch();
         
-        if (hidHandler.HidPath == null)
-        {
-            ConsoleUtils.WriteLine("Couldn't create hid stream; path not found.");
-            return;
-        }
         var hidStream = hidHandler.CreateHidStream("/dev/hidg1");
         
         while (true)
