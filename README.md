@@ -19,6 +19,7 @@ _Has since improved exponentially as of 3/6/2024_
 - .NET 8 installed on local machine (**NOT on the RPI**), this is for compiling the binary.
 
 ## Installation
+_**Read the requirements**_
 ```
 git clone https://github.com/StrateimTech/Helious
 cd ./Helious
