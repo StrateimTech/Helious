@@ -2,19 +2,17 @@ using System.Net;
 using System.Net.Sockets;
 using HID_API;
 
-namespace Helious.Game;
+namespace Helious.Modules;
 
 public class RemoteHandler
 {
     private readonly Mouse _localState = new();
     
     private static readonly Socket Socket = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-    private static readonly IPAddress Broadcast = IPAddress.Parse("192.168.68.58");
-    private static readonly IPEndPoint EndPoint = new(Broadcast, 7484);
-    
-    public RemoteHandler(HidHandler hidHandler)
+
+    public RemoteHandler(HidHandler hidHandler, IPAddress remoteAddress)
     {
-        Socket.Connect(EndPoint);
+        Socket.Connect(new IPEndPoint(remoteAddress, 7484));
         
         while (true)
         {

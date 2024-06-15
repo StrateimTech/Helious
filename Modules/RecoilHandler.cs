@@ -1,10 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
+﻿using System.Diagnostics;
 using Helious.Utils;
 using HID_API;
 
-namespace Helious.Game;
+namespace Helious.Modules;
 
 public class RecoilHandler
 {

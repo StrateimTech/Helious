@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using Helious.Utils;
 using HID_API;
 
-namespace Helious.Game;
+namespace Helious.Modules;
 
 public class ServerHandler
 {
