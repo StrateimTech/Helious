@@ -82,8 +82,8 @@ public class Program
                 break;
         }
         
-        // Enable it if you want! (NOT ENCRYPTED!)
-        // var hostAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList.Where(x => x.AddressFamily == AddressFamily.InterNetwork).ToArray()[^1];
+        // Enable it if you want remote injection/state viewing access! (NOT ENCRYPTED!)
+        // var hostAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList.Where(x => x.AddressFamily == AddressFamily.InterNetwork && x.ToString().Contains("192")).ToArray()[^1];
         // var serverThread = new Thread(() => new ServerHandler(hidHandler!, hostAddress))
         // {
         //     IsBackground = true,
@@ -91,7 +91,7 @@ public class Program
         // };
         // serverThread.Start();
         //
-        // var remoteThread = new Thread(() => new RemoteHandler(hidHandler!))
+        // var remoteThread = new Thread(() => new RemoteHandler(hidHandler!, IPAddress.Parse("192.168.68.62")))
         // {
         //     IsBackground = true,
         //     Priority = ThreadPriority.Highest
