@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using Helious.Game;
+using Helious.Modules;
 using Helious.Utils;
 using HID_API;
 
