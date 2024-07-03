@@ -44,7 +44,7 @@ For the most accurate recoil compensation you'll want a weapon setup with the le
 - .NET 8 installed on local machine (**NOT on the RPI**), this is for compiling the binary.
 
 ## Installation
-_**Read the requirements first!**_
+_**Read the requirements first!**_ <br>
 ###**Follow HID-API Gadget first time [installation](https://github.com/StrateimTech/hid-api-rs?tab=readme-ov-file#first-installation)**
 To check if its correctly setup Ls into ``/dev/`` and see if ``hidg0`` and ``hidg1`` are present.
 ```
