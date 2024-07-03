@@ -45,8 +45,7 @@ For the most accurate recoil compensation you'll want a weapon setup with the le
 
 ## Installation
 _**Read the requirements first!**_ <br>
-###**Follow HID-API Gadget first time [installation](https://github.com/StrateimTech/hid-api-rs?tab=readme-ov-file#first-installation)**
-To check if its correctly setup Ls into ``/dev/`` and see if ``hidg0`` and ``hidg1`` are present.
+Follow HID-API Gadget guide for first time [installation](https://github.com/StrateimTech/hid-api-rs?tab=readme-ov-file#first-installation). To verify if everything is setup correctly, ``ls`` into ``/dev/`` and see if ``hidg0`` and ``hidg1`` are present.
 ```
 git clone https://github.com/StrateimTech/Helious
 cd ./Helious
