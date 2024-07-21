@@ -71,7 +71,7 @@ public class RecoilHandler
 
                     if (currentBullet == 0)
                     {
-                        localY += (decimal) InitialRecoil;
+                        localY = (decimal) Math.Pow((double)localY, InitialRecoil);
                     }
 
                     localY *= multiplier;
