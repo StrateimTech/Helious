@@ -40,6 +40,10 @@ Follow HID-API Gadget guide for first time [installation](https://github.com/Str
 ```
 git clone https://github.com/StrateimTech/Helious
 cd ./Helious
+```
+Download latest release of HID-API, https://github.com/StrateimTech/HID-API/releases.
+Move latest ``HID-API.dll`` into ``/helious/libs``
+```
 dotnet publish -c Release -o publish -r linux-arm
 ```
 Transfer all files within the build directory to the RPi via your choice of method.
