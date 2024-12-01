@@ -1,17 +1,11 @@
 # Helious
-Complete-_ish_ BattleBit recoil compensation
+Complete-_ish_ BBR recoil compensation
 
-![Gif Example](recoil.gif)
-Uses the same concepts for hardware mouse injection as [Cezium](https://github.com/StrateimTech/Cezium) <br>
-_Has since improved exponentially as of 3/6/2024_
-
-## Features
-- Supports **all** types of weapon configurations along with scopes
-- Undetectable by EAC (Rust + BattleBit + Apex no ban +3 years)
+**Please use [Rust version](https://github.com/StrateimTech/helious-rs) instead, outdated hid-api & less precision**
 
 ## Cons
 - Doesn't support horizontal recoil compensation. (Impossible)
-- Doesn't support burst & single fire modes
+- Doesn't support burst & single fire modes*
 
 ## Input Tutorial
 > Inputs, (Vertical, Initial, Rpm, Magazine Size, Fov) <br>
@@ -20,14 +14,11 @@ _Has since improved exponentially as of 3/6/2024_
 ### Required Inputs<br>
 Stock AK74 for example<br>
 ``1.40, 1.0, 670, 30, 110``
-* 1.40 = Vertical Recoil
-* 1.0 = First Shot Kick
-* 670 = Firerate
+* 1.40 = Vertical recoil
+* 1.0 = First shot kick
+* 670 = Fire rate
 * 30 = Magazine capacity
 * 110 = FOV <br>
-
-Most of these can be found on the bottom right when choosing/modifying a weapon.
-![gun-stats-example.png](gun-stats-example.png)
 
 ### Optional Inputs<br>
 ``1.40, 1.0, 670, 30, 110, 8, 2x, true, true``
@@ -37,7 +28,7 @@ Most of these can be found on the bottom right when choosing/modifying a weapon.
 * true = ^, instead locally compensates for accuracy loss during smoothing process. (default: true)
 
 ## Gun setup tips
-For the most accurate recoil compensation you'll want a weapon setup with the least horizontal recoil even if vertical recoil is high. (e.g. using "B C M- Gun Fighter" grip as it provides the most horizontal recoil reduction atm)
+For the most accurate recoil compensation you'll want a weapon setup with the least horizontal recoil even if vertical recoil is high. (e.g. using "BCM" grip as it provides the most horizontal recoil reduction)
 
 ### Requirements
 - RPi 4b or newer (Must have USB OTG)
@@ -58,3 +49,6 @@ chmod +x ./Helious
 sudo ./Helious
 ```
 Requires elevated permission to access ``/dev/`` directory
+
+# NOTE
+Please **do not use this in multiplayer**, this is further validation that static recoil systems are **NOT** to be used.
