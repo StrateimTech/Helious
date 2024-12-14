@@ -10,24 +10,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="Web\Assets\**">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Figgle" Version="0.5.1" />
         <Reference Include="HID-API, Version=1.0.0.192, Culture=neutral, PublicKeyToken=null">
             <HintPath>libs\HID-API.dll</HintPath>
         </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="publish\global.json" />
-      <_ContentIncludedByDefault Remove="publish\Helious.deps.json" />
-      <_ContentIncludedByDefault Remove="publish\Helious.runtimeconfig.json" />
-      <_ContentIncludedByDefault Remove="publish\publish\global.json" />
-      <_ContentIncludedByDefault Remove="publish\publish\Helious.deps.json" />
-      <_ContentIncludedByDefault Remove="publish\publish\Helious.runtimeconfig.json" />
     </ItemGroup>
 </Project>
