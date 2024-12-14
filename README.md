@@ -1,7 +1,7 @@
 # Helious
 Complete-_ish_ BBR recoil compensation
 
-**Please use [Rust version](https://github.com/StrateimTech/helious-rs) instead, outdated hid-api & less precision**
+## **Please use the [Rust version](https://github.com/StrateimTech/helious-rs) instead! This version is outdated & uses a inferior hid-api version**
 
 ## Cons
 - Doesn't support horizontal recoil compensation. (Impossible)
